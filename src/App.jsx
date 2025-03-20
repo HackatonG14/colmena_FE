@@ -1,15 +1,11 @@
-import React, { useState } from 'react'
-import './App.css'
-import Router from './router/Router'
+import AppRouter from './routes/AppRouter';
+
+
 function App() {
 
-  const allRoutes = [allRoutes, setAllRoutes] = useState([])
-
   return (
-  <>
-  <Router allRoutes={allRoutes} />
-  </>
+    <AppRouter/>
   )
 }
 
-export default App
+export default App;
