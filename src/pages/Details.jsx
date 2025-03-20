@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Carousel from 'react-multi-carousel'; 
 import 'react-multi-carousel/lib/styles.css'
@@ -10,7 +10,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import {Swiper, SwiperSlide } from 'swiper/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { product_details } from '../store/reducers/homeReducer';
+import { product_details, messageClear as clearHomeMessage } from '../store/reducers/homeReducer';
 import toast from 'react-hot-toast';
 import { add_to_card, messageClear, add_to_wishlist } from '../store/reducers/cardReducer';
 import { AiFillHeart, AiFillStar } from 'react-icons/ai';
@@ -77,27 +77,101 @@ const DetailsDescription = ({ description }) => {
     );
 };
 
+// Componente esqueleto para la carga de imágenes y detalles
+const SkeletonLoader = () => {
+    return (
+        <div className="w-[85%] md:w-[90%] sm:w-[90%] lg:w-[90%] h-full mx-auto animate-pulse">
+            <div className="py-5 flex items-center justify-start gap-3">
+                <div className="h-4 w-16 bg-gray-200 rounded"></div>
+                <div className="h-4 w-4 bg-gray-200 rounded-full"></div>
+                <div className="h-4 w-24 bg-gray-200 rounded"></div>
+            </div>
+            <div className="w-full flex flex-wrap md:flex-row gap-8">
+                {/* Imagen y galería */}
+                <div className="w-full md:w-[48%] bg-white rounded-3xl shadow-sm p-5">
+                    <div className="w-full h-[500px] bg-gray-200 rounded-2xl"></div>
+                    <div className="py-3">
+                        <div className="flex gap-2 w-full flex-wrap">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="h-[120px] w-[120px] bg-gray-200 rounded-xl"></div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="w-full md:w-[48%] flex flex-col gap-4">
+                    <div className="bg-white rounded-3xl shadow-sm p-5">
+                        <div className="h-8 w-3/4 bg-gray-200 rounded mb-4"></div>
+                        <div className="h-4 w-1/2 bg-gray-200 rounded mb-4"></div>
+                        <div className="h-32 w-full bg-gray-200 rounded-2xl mb-4"></div>
+                        <div className="h-8 w-1/4 bg-gray-200 rounded mb-4"></div>
+                        <div className="h-12 w-full bg-gray-200 rounded-full"></div>
+                    </div>
+                    <div className="bg-white rounded-3xl shadow-sm p-5">
+                        <div className="h-6 w-1/2 bg-gray-200 rounded mb-4"></div>
+                        <div className="space-y-3">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="flex items-center gap-3">
+                                    <div className="h-4 w-32 bg-gray-200 rounded"></div>
+                                    <div className="h-4 w-48 bg-gray-200 rounded"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const Details = () => {
     const navigate = useNavigate();
     const {slug} = useParams();
     const dispatch = useDispatch();
-    const {product, relatedProducts, loader} = useSelector(state => state.home);
+    const {product, relatedProducts, loader, errorMessage: homeErrorMessage} = useSelector(state => state.home);
     const {userInfo} = useSelector(state => state.auth);
     const {errorMessage, successMessage} = useSelector(state => state.card);
     const [loading, setLoading] = useState(true);
+    const [imageLoaded, setImageLoaded] = useState(false);
     const [image, setImage] = useState('');
     const [state, setState] = useState('reviews');
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState('descripcion');
 
+    // Precargar la imagen principal
+    const handleImageLoad = useCallback(() => {
+        setImageLoaded(true);
+    }, []);
+
     useEffect(() => {
+        // Desplazar la página al inicio cuando se carga
+        window.scrollTo(0, 0);
+        
+        // Iniciar carga del producto
         dispatch(product_details(slug));
-        // Simulamos un tiempo de carga para la demo
-        const timer = setTimeout(() => {
-            setLoading(false);
-        }, 800);
-        return () => clearTimeout(timer);
+        
+        // Limpiar estados
+        return () => {
+            setImageLoaded(false);
+            setImage('');
+        };
     }, [slug, dispatch]);
+
+    // Sincronizar loading state con el estado de Redux
+    useEffect(() => {
+        setLoading(loader);
+    }, [loader]);
+
+    // Manejar mensajes de error de home reducer
+    useEffect(() => {
+        if (homeErrorMessage) {
+            // Mostrar el mensaje de error solo una vez
+            toast.error(homeErrorMessage, {
+                id: `error-${slug}`, // Usar ID único basado en el slug para evitar duplicados
+                duration: 3000
+            });
+            dispatch(clearHomeMessage());
+        }
+    }, [homeErrorMessage, dispatch, slug]);
 
     // Datos demo para usar cuando no hay conexión con la API
     const demoProduct = {
@@ -137,11 +211,17 @@ const Details = () => {
     const displayProduct = product?.name ? product : demoProduct;
     const displayRelatedProducts = relatedProducts?.length > 0 ? relatedProducts : demoRelatedProducts;
 
+    // Establecer la imagen principal cuando los datos del producto estén disponibles
     useEffect(() => {
         if (displayProduct?.images?.length > 0 && !image) {
             setImage(displayProduct.images[0]);
+            
+            // Precargar la imagen
+            const img = new Image();
+            img.src = displayProduct.images[0];
+            img.onload = handleImageLoad;
         }
-    }, [displayProduct, image]);
+    }, [displayProduct, image, handleImageLoad]);
 
     const responsive = {
         superLargeDesktop: {
@@ -212,7 +292,9 @@ const Details = () => {
                 rating: displayProduct.rating,
                 slug: displayProduct.slug
             }));
+            toast.success("Servicio añadido a favoritos");
         } else {
+            toast.error("Debes iniciar sesión para guardar favoritos");
             navigate('/login');
         }
     };
@@ -259,9 +341,7 @@ const Details = () => {
     return (
         <div className="pt-0 bg-white min-h-screen">
             {loading ? (
-                <div className="flex justify-center items-center h-screen">
-                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-500"></div>
-                </div>
+                <SkeletonLoader />
             ) : (
                 <div className="w-[85%] md:w-[90%] sm:w-[90%] lg:w-[90%] h-full mx-auto">
                     <div className="py-5 flex items-center justify-start gap-3 text-sm">
@@ -278,25 +358,36 @@ const Details = () => {
                                 <div className="w-full h-[500px] relative group">
                                     {displayProduct?.discount > 0 && <div className="absolute -rotate-90 flex justify-center items-center text-white font-medium h-8 w-32 top-5 -left-7 z-10 bg-amber-500 rounded-r-full">-{displayProduct.discount}%</div>}
                                     <img 
-                                        className="w-full h-full object-contain rounded-2xl group-hover:scale-105 transition-transform duration-300" 
+                                        className={`w-full h-full object-contain rounded-2xl group-hover:scale-105 transition-transform duration-300 ${!imageLoaded ? 'opacity-0' : 'opacity-100'}`}
                                         src={image} 
                                         alt={displayProduct?.name} 
+                                        onLoad={handleImageLoad}
+                                        loading="eager"
                                     />
+                                    {!imageLoaded && (
+                                        <div className="absolute inset-0 bg-gray-200 rounded-2xl animate-pulse"></div>
+                                    )}
                                 </div>
                                 <div className="py-3">
                                     <div className="flex gap-2 w-full flex-wrap">
                                         {
-                                            displayProduct?.images?.map((img, i) => {
-                                                return (
-                                                    <div
-                                                        onClick={() => setImage(img)}
-                                                        key={i}
-                                                        className={`h-[120px] overflow-hidden rounded-xl border cursor-pointer hover:shadow-md transition-shadow duration-300 ${img === image ? 'border-amber-500 shadow-md' : 'border-gray-200'}`}
-                                                    >
-                                                        <img className="w-full h-full object-cover object-top" src={img} alt="" />
-                                                    </div>
-                                                )
-                                            })
+                                            displayProduct?.images?.map((img, i) => (
+                                                <div
+                                                    onClick={() => {
+                                                        setImageLoaded(false);
+                                                        setImage(img);
+                                                    }}
+                                                    key={i}
+                                                    className={`h-[120px] overflow-hidden rounded-xl border cursor-pointer hover:shadow-md transition-shadow duration-300 ${img === image ? 'border-amber-500 shadow-md' : 'border-gray-200'}`}
+                                                >
+                                                    <img 
+                                                        className="w-full h-full object-cover object-top" 
+                                                        src={img} 
+                                                        alt={`${displayProduct.name} - imagen ${i+1}`}
+                                                        loading={i < 3 ? "eager" : "lazy"} 
+                                                    />
+                                                </div>
+                                            ))
                                         }
                                     </div>
                                 </div>
@@ -366,7 +457,10 @@ const Details = () => {
                                                 Añadir a la cola de intercambio
                                             </button>
                                         </div>
-                                        <div className="w-[40px] h-[40px] flex justify-center items-center bg-gray-100 text-amber-500 rounded-full shadow-sm hover:bg-amber-50 cursor-pointer">
+                                        <div 
+                                            onClick={add_wishlist}
+                                            className="w-[40px] h-[40px] flex justify-center items-center bg-gray-100 text-amber-500 rounded-full shadow-sm hover:bg-amber-50 cursor-pointer transition-colors"
+                                        >
                                             <AiFillHeart />
                                         </div>
                                     </div>
@@ -467,6 +561,7 @@ const Details = () => {
                                                                 className="w-full h-full rounded-t-3xl object-cover object-top group-hover:scale-110 transition-transform duration-300"
                                                                 src={item.images[0]}
                                                                 alt={item.name}
+                                                                loading="lazy"
                                                             />
                                                             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                                         </div>

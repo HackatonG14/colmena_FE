@@ -65,13 +65,25 @@ export const query_products = createAsyncThunk(
 
 export const product_details = createAsyncThunk(
     'product/product_details',
-    async(slug, { fulfillWithValue }) => {
+    async(slug, { rejectWithValue, fulfillWithValue, getState }) => {
         try {
-            const {data} = await api.get(`/home/product-details/${slug}`)
-            //  console.log(data)
-            return fulfillWithValue(data)
+            // Evitar realizar peticiones duplicadas si ya estamos procesando la misma
+            const { home } = getState();
+            if (home.loader && home.currentSlug === slug) {
+                console.log(`Already fetching details for: ${slug}, skipping duplicate request`);
+                return;
+            }
+            
+            console.log(`Fetching details for product with slug: ${slug}`);
+            const {data} = await api.get(`/home/product-details/${slug}`);
+            console.log(`Successfully fetched details for: ${slug}`);
+            return fulfillWithValue(data);
         } catch (error) {
-            console.log(error.respone)
+            console.error(`Error fetching details for ${slug}:`, error);
+            return rejectWithValue({
+                message: error.response?.data?.message || 'Error al obtener detalles del servicio',
+                status: error.response?.status
+            });
         }
     }
 )
@@ -146,15 +158,14 @@ export const homeReducer = createSlice({
         totalReview: 0,
         rating_review: [],
         reviews : [],
-        banners: [] 
+        banners: [],
+        currentSlug: null
     },
     reducers : {
-
         messageClear : (state,_) => {
             state.errorMessage = ""
             state.successMessage = ""
         }
- 
     },
     extraReducers: (builder) => {
         builder
@@ -209,10 +220,23 @@ export const homeReducer = createSlice({
             state.parPage = payload.parPage; 
         })
 
-        .addCase(product_details.fulfilled, (state, { payload }) => { 
-            state.product = payload.product;
-            state.relatedProducts = payload.relatedProducts;
-            state.moreProducts = payload.moreProducts; 
+        .addCase(product_details.pending, (state, { meta }) => {
+            state.loader = true;
+            state.currentSlug = meta.arg;
+        })
+        .addCase(product_details.fulfilled, (state, { payload, meta }) => { 
+            state.loader = false;
+            state.currentSlug = null;
+            if (payload) {
+                state.product = payload.product;
+                state.relatedProducts = payload.relatedProducts;
+                state.moreProducts = payload.moreProducts;
+            }
+        })
+        .addCase(product_details.rejected, (state, { payload, meta }) => {
+            state.loader = false;
+            state.currentSlug = null;
+            state.errorMessage = payload?.message || "Error al cargar detalles del servicio";
         })
 
         .addCase(customer_review.fulfilled, (state, { payload }) => {
