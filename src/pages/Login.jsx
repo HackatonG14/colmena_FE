@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaFacebookF, FaGoogle } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import { FadeLoader } from 'react-spinners';
@@ -10,12 +10,7 @@ import { useAuth, useForm } from '../hooks';
 const Login = () => {
     const navigate = useNavigate();
     const { loginUser, isAuthenticated, isLoading } = useAuth();
-
-    // Initial form values
-    const initialValues = {
-        email: '',
-        password: ''
-    };
+    const [formError, setFormError] = useState(null);
 
     // Form submission handler
     const handleSubmit = (values) => {
@@ -30,7 +25,19 @@ const Login = () => {
         handleChange, 
         handleBlur, 
         handleSubmit: submitForm 
-    } = useForm(initialValues, handleSubmit);
+    } = useForm({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        validate: (values) => {
+            const errors = {};
+            if (!values.email) errors.email = 'El correo electrónico es requerido';
+            if (!values.password) errors.password = 'La contraseña es requerida';
+            return errors;
+        },
+        onSubmit: handleSubmit
+    });
 
     // Redirect if authenticated
     useEffect(() => { 
