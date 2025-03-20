@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { get_products, get_category } from '../store/reducers/homeReducer';
-import { FaHandshake, FaSearch, FaExchangeAlt, FaUserFriends } from 'react-icons/fa';
+import { add_to_wishlist } from '../store/reducers/cardReducer';
+import { FaHandshake, FaSearch, FaExchangeAlt, FaUserFriends, FaMapMarkerAlt } from 'react-icons/fa';
+import { AiFillHeart } from 'react-icons/ai';
 import Button from '../components/ui/Button';
 import Rating from '../components/ui/Rating';
+import toast from 'react-hot-toast';
 
 // Datos de ejemplo para pruebas - servicios de intercambio para Colmena
 const mockServices = [
@@ -17,6 +20,7 @@ const mockServices = [
     hoursRequired: 20,
     image: 'https://via.placeholder.com/500x300/e9c46a/ffffff?text=Diseño+Web',
     rating: 4.5,
+    shopInfo: { city: 'Madrid' }
   },
   {
     _id: '2',
@@ -27,6 +31,7 @@ const mockServices = [
     hoursRequired: 10,
     image: 'https://via.placeholder.com/500x300/2a9d8f/ffffff?text=Clases+de+Idiomas',
     rating: 5,
+    shopInfo: { city: 'Barcelona' }
   },
   {
     _id: '3',
@@ -37,6 +42,7 @@ const mockServices = [
     hoursRequired: 5,
     image: 'https://via.placeholder.com/500x300/e76f51/ffffff?text=Reparación+Electrónicos',
     rating: 4,
+    shopInfo: { city: 'Remoto' }
   },
   {
     _id: '4',
@@ -47,6 +53,7 @@ const mockServices = [
     hoursRequired: 3,
     image: 'https://via.placeholder.com/500x300/264653/ffffff?text=Asesoría+Legal',
     rating: 4.8,
+    shopInfo: { city: 'Valencia' }
   }
 ];
 
@@ -82,7 +89,9 @@ const mainCategories = [
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { products: storeServices, categorys, loader, errorMessage } = useSelector(state => state.home);
+  const { userInfo } = useSelector(state => state.auth);
   
   const [localServices] = useState({
     products: mockServices
@@ -97,6 +106,50 @@ const Home = () => {
     dispatch(get_products());
     dispatch(get_category());
   }, [dispatch]);
+
+  // Lista de ciudades españolas para ubicaciones aleatorias si no existen
+  const ciudadesEspañolas = [
+    'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Málaga', 
+    'Remoto', 'Bilbao', 'Zaragoza', 'Murcia', 'Palma de Mallorca'
+  ];
+  
+  // Función para obtener la ubicación del servicio
+  const getLocation = (service) => {
+    if (service?.shopInfo?.city) {
+      return service.shopInfo.city;
+    }
+    
+    // Generar una ubicación aleatoria si no existe
+    const randomIndex = service?._id ? 
+      parseInt(service._id.toString().substr(-1)) % ciudadesEspañolas.length : 
+      Math.floor(Math.random() * ciudadesEspañolas.length);
+        
+    return ciudadesEspañolas[randomIndex];
+  };
+
+  // Función para agregar a favoritos
+  const addToWishlist = (e, service) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!userInfo) {
+      toast.error("Debes iniciar sesión para guardar favoritos");
+      return navigate('/login');
+    }
+    
+    dispatch(add_to_wishlist({
+      userId: userInfo.id,
+      productId: service._id,
+      name: service.name,
+      price: service.price || service.hoursRequired || 0,
+      image: service.image,
+      discount: service.discount || 0,
+      rating: service.rating || 0,
+      slug: service.slug
+    }));
+    
+    toast.success("Servicio añadido a favoritos");
+  };
 
   // Función para truncar texto
   const truncateText = (text, maxLength) => {
@@ -201,33 +254,59 @@ const Home = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {services.map((service) => (
-              <Link 
+              <div 
                 key={service._id} 
-                to={`/product/details/${service.slug}`}
                 className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <img 
-                    src={service.image} 
-                    alt={service.name} 
-                    className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-                  />
+                  <Link to={`/product/details/${service.slug}`}>
+                    <img 
+                      src={service.image} 
+                      alt={service.name} 
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </Link>
+                  
+                  {service.discount > 0 && (
+                    <div className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-medium px-3 py-1 rounded-full">
+                      -{service.discount}%
+                    </div>
+                  )}
+                  
+                  <button 
+                    onClick={(e) => addToWishlist(e, service)} 
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/70 hover:bg-white flex items-center justify-center text-gray-600 hover:text-amber-500 backdrop-blur-sm transition-colors"
+                    aria-label="Añadir a favoritos"
+                  >
+                    <AiFillHeart className="text-lg" />
+                  </button>
                 </div>
+                
                 <div className="p-6">
                   <div className="flex items-center mb-2">
-                    <Rating value={service.rating} size="sm" />
+                    <Rating ratings={service.rating} />
                     <span className="text-gray-500 text-sm ml-2">{service.rating}</span>
                   </div>
-                  <h3 className="font-medium text-lg text-gray-900 mb-2">{service.name}</h3>
+                  
+                  <Link to={`/product/details/${service.slug}`}>
+                    <h3 className="font-medium text-lg text-gray-900 mb-2 hover:text-amber-500 transition-colors">{service.name}</h3>
+                  </Link>
+                  
+                  <div className="flex items-center text-gray-600 text-sm mb-3">
+                    <FaMapMarkerAlt className="text-amber-500 mr-1" />
+                    <span>{getLocation(service)}</span>
+                  </div>
+                  
                   <p className="text-gray-600 text-sm mb-3">
                     {truncateText(service.exchangeFor, 70)}
                   </p>
+                  
                   <div className="flex items-center text-amber-600 font-medium">
                     <FaExchangeAlt className="mr-2" />
                     <span>{service.hoursRequired} horas</span>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>

@@ -267,7 +267,7 @@ const Details = () => {
                     <div className="py-5 flex items-center justify-start gap-3 text-sm">
                         <Link to="/" className="text-amber-500 hover:text-amber-600 transition-colors">Inicio</Link>
                         <span className="text-gray-400">/</span>
-                        <Link to={`/category-shop?category=${displayProduct?.category}`} className="text-amber-500 hover:text-amber-600 transition-colors">{displayProduct?.category}</Link>
+                        <Link to={`/products?category=${displayProduct?.category}`} className="text-amber-500 hover:text-amber-600 transition-colors">{displayProduct?.category}</Link>
                         <span className="text-gray-400">/</span>
                         <span className="text-gray-600 line-clamp-1">{displayProduct?.name}</span>
                     </div>
@@ -346,7 +346,7 @@ const Details = () => {
                                         <div className="text-gray-800 flex flex-col gap-1">
                                             <span className="text-lg font-bold">{displayProduct?.price} horas</span>
                                             <div className="flex items-center gap-3">
-                                                <Link to={`/category-shop?category=${displayProduct?.category}`} className="bg-amber-100 text-amber-500 px-3 py-1 rounded-full text-sm shadow-sm hover:bg-amber-200 transition-colors">
+                                                <Link to={`/products?category=${displayProduct?.category}`} className="bg-amber-100 text-amber-500 px-3 py-1 rounded-full text-sm shadow-sm hover:bg-amber-200 transition-colors">
                                                     {displayProduct?.category}
                                                 </Link>
                                                 <div className="px-3 py-1 bg-green-100 text-green-500 text-sm rounded-full">

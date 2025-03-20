@@ -84,9 +84,9 @@ const Card = () => {
                             Iniciar sesión
                         </Button>
                         <Button 
+                            variant="outline"
                             as={Link}
                             to="/shops"
-                            variant="outline"
                             className="px-6 py-2"
                         >
                             Explorar servicios
@@ -256,9 +256,9 @@ const Card = () => {
                         Explora nuestra plataforma para encontrar servicios que puedas intercambiar.
                     </p>
                     <Button 
-                        as={Link} 
-                        to="/shops" 
                         variant="primary"
+                        as={Link}
+                        to="/shops"
                         className="px-6 py-2"
                     >
                         Explorar servicios

@@ -274,37 +274,6 @@ const CategoryShop = () => {
                                     </div>
                                 </div>
                             </div>
-
-                            {/* Latest products panel */}
-                            <div className="bg-white rounded-3xl shadow-sm p-6 hidden md:block border border-gray-100">
-                                <h3 className="text-lg font-medium text-gray-800 mb-4">Servicios recientes</h3>
-                                <div className="divide-y divide-gray-100">
-                                    {latest_product && latest_product.slice(0, 3).map((product, index) => (
-                                        <div key={index} className="py-3">
-                                            <Link to={`/product/details/${product.slug}`} className="flex items-center gap-3 group">
-                                                <div className="w-16 h-16 rounded-lg overflow-hidden">
-                                                    <img 
-                                                        src={product.images?.[0]} 
-                                                        alt={product.name} 
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <h4 className="text-sm font-medium text-gray-800 group-hover:text-amber-500 transition-colors">{product.name}</h4>
-                                                    <div className="flex text-amber-500 text-xs mt-1">
-                                                        <AiFillStar />
-                                                        <AiFillStar />
-                                                        <AiFillStar />
-                                                        <AiFillStar />
-                                                        <CiStar />
-                                                    </div>
-                                                    <p className="text-sm font-medium text-amber-500 mt-1">{product.hoursRequired || product.price} horas</p>
-                                                </div>
-                                            </Link>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
                         </div>
 
                         {/* Main content */}

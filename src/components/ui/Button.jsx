@@ -18,6 +18,8 @@ const Button = ({
   className = '',
   onClick,
   ariaLabel,
+  as: Component = 'button',
+  to,
   ...rest
 }) => {
   // Base styles
@@ -91,20 +93,35 @@ const Button = ({
     </svg>
   );
 
+  // Props específicos para el botón
+  const buttonProps = {
+    type,
+    disabled: disabled || loading,
+    onClick: !disabled && !loading ? onClick : undefined,
+    'aria-label': ariaLabel || (typeof children === 'string' ? children : undefined),
+    'aria-disabled': disabled || loading,
+    'aria-busy': loading,
+  };
+
+  // Props específicos para el componente Link
+  const linkProps = {
+    to,
+    disabled: disabled || loading,
+    'aria-label': ariaLabel || (typeof children === 'string' ? children : undefined),
+  };
+
+  // Determinar qué props usar
+  const componentProps = Component === 'button' ? buttonProps : linkProps;
+
   return (
-    <button
-      type={type}
-      disabled={disabled || loading}
+    <Component
       className={`
         ${baseStyles}
         ${sizeStyles[size]}
         ${variantStyles[variant]}
         ${className}
       `}
-      onClick={!disabled && !loading ? onClick : undefined}
-      aria-label={ariaLabel || (typeof children === 'string' ? children : undefined)}
-      aria-disabled={disabled || loading}
-      aria-busy={loading}
+      {...componentProps}
       {...rest}
     >
       {loading && <LoadingSpinner />}
@@ -115,7 +132,7 @@ const Button = ({
       {icon && iconPosition === 'right' && !loading && (
         <span className="ml-2">{icon}</span>
       )}
-    </button>
+    </Component>
   );
 };
 
@@ -132,6 +149,8 @@ Button.propTypes = {
   className: PropTypes.string,
   onClick: PropTypes.func,
   ariaLabel: PropTypes.string,
+  as: PropTypes.elementType,
+  to: PropTypes.string,
 };
 
 export default Button; 

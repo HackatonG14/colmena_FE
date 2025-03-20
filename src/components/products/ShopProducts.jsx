@@ -2,9 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Rating from '../ui/Rating';
 import { AiFillHeart } from 'react-icons/ai';
-import { FaExchangeAlt } from 'react-icons/fa';
+import { FaExchangeAlt, FaMapMarkerAlt } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { add_to_wishlist } from '../../store/reducers/cardReducer';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const ShopProducts = ({ products = [], styles }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { userInfo } = useSelector(state => state.auth);
+    
     // Función para obtener una imagen segura o un placeholder
     const getImageSrc = (product) => {
         if (product.images && product.images.length > 0) {
@@ -16,6 +24,50 @@ const ShopProducts = ({ products = [], styles }) => {
         }
         // Retornar una imagen de placeholder por defecto
         return `https://via.placeholder.com/500x300/e9c46a/ffffff?text=${encodeURIComponent(product.name || 'Servicio')}`;
+    };
+
+    // Lista de ciudades españolas para generar ubicaciones aleatorias si no existen
+    const ciudadesEspañolas = [
+        'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Málaga', 
+        'Remoto', 'Bilbao', 'Zaragoza', 'Murcia', 'Palma de Mallorca'
+    ];
+    
+    // Función para obtener la ubicación del servicio
+    const getLocation = (product) => {
+        if (product?.shopInfo?.city) {
+            return product.shopInfo.city;
+        }
+        
+        // Generar una ubicación aleatoria si no existe
+        const randomIndex = product?.id ? 
+            parseInt(product.id.toString().substr(-1)) % ciudadesEspañolas.length : 
+            Math.floor(Math.random() * ciudadesEspañolas.length);
+            
+        return ciudadesEspañolas[randomIndex];
+    };
+    
+    // Función para agregar a favoritos
+    const addToWishlist = (e, product) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!userInfo) {
+            toast.error("Debes iniciar sesión para guardar favoritos");
+            return navigate('/login');
+        }
+        
+        dispatch(add_to_wishlist({
+            userId: userInfo.id,
+            productId: product._id,
+            name: product.name,
+            price: product.price || product.hoursRequired || 0,
+            image: getImageSrc(product),
+            discount: product.discount || 0,
+            rating: product.rating || 0,
+            slug: product.slug
+        }));
+        
+        toast.success("Servicio añadido a favoritos");
     };
 
     return (
@@ -39,21 +91,32 @@ const ShopProducts = ({ products = [], styles }) => {
                                     </div>
                                 )}
                                 
-                                <button className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/70 hover:bg-white flex items-center justify-center text-gray-600 hover:text-amber-500 backdrop-blur-sm transition-colors" aria-label="Añadir a favoritos">
+                                <button 
+                                    onClick={(e) => addToWishlist(e, product)} 
+                                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/70 hover:bg-white flex items-center justify-center text-gray-600 hover:text-amber-500 backdrop-blur-sm transition-colors"
+                                    aria-label="Añadir a favoritos"
+                                >
                                     <AiFillHeart className="text-lg" />
                                 </button>
                             </div>
                             
                             <div className="p-5">
-                                <Link to={`/product/details/${product.slug}`}>
-                                    <h3 className="text-lg font-medium text-gray-900 hover:text-amber-500 transition-colors mb-2 line-clamp-1">
-                                        {product.name}
-                                    </h3>
-                                </Link>
+                                <div className="flex justify-between items-start mb-2">
+                                    <Link to={`/product/details/${product.slug}`}>
+                                        <h3 className="text-lg font-medium text-gray-900 hover:text-amber-500 transition-colors line-clamp-1">
+                                            {product.name}
+                                        </h3>
+                                    </Link>
+                                </div>
                                 
                                 <div className="flex items-center mb-3">
                                     <Rating ratings={product.rating} />
                                     <span className="text-xs text-gray-500 ml-1">({product.review || 0})</span>
+                                </div>
+                                
+                                <div className="flex items-center text-gray-600 text-sm mb-3">
+                                    <FaMapMarkerAlt className="text-amber-500 mr-1" />
+                                    <span>{getLocation(product)}</span>
                                 </div>
                                 
                                 <div className="flex flex-wrap items-end justify-between">
@@ -67,12 +130,10 @@ const ShopProducts = ({ products = [], styles }) => {
                                         </p>
                                     )}
                                     
-                                    {product.exchangeFor && (
-                                        <div className="flex items-center gap-1 text-sm text-amber-600">
-                                            <FaExchangeAlt className="text-amber-500" />
-                                            <span>{product.hoursRequired} horas</span>
-                                        </div>
-                                    )}
+                                    <div className="flex items-center gap-1 text-sm text-amber-600">
+                                        <FaExchangeAlt className="text-amber-500" />
+                                        <span>{product.hoursRequired || product.price || 0} horas</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -97,22 +158,33 @@ const ShopProducts = ({ products = [], styles }) => {
                                     </div>
                                 )}
                                 
-                                <button className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/70 hover:bg-white flex items-center justify-center text-gray-600 hover:text-amber-500 backdrop-blur-sm transition-colors" aria-label="Añadir a favoritos">
+                                <button 
+                                    onClick={(e) => addToWishlist(e, product)} 
+                                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/70 hover:bg-white flex items-center justify-center text-gray-600 hover:text-amber-500 backdrop-blur-sm transition-colors"
+                                    aria-label="Añadir a favoritos"
+                                >
                                     <AiFillHeart className="text-lg" />
                                 </button>
                             </div>
                             
                             <div className="p-6 flex-1 flex flex-col">
                                 <div className="mb-auto">
-                                    <Link to={`/product/details/${product.slug}`}>
-                                        <h3 className="text-xl font-medium text-gray-900 hover:text-amber-500 transition-colors mb-2">
-                                            {product.name}
-                                        </h3>
-                                    </Link>
+                                    <div className="flex justify-between items-start mb-2">
+                                        <Link to={`/product/details/${product.slug}`}>
+                                            <h3 className="text-xl font-medium text-gray-900 hover:text-amber-500 transition-colors">
+                                                {product.name}
+                                            </h3>
+                                        </Link>
+                                    </div>
                                     
                                     <div className="flex items-center mb-3">
                                         <Rating ratings={product.rating} />
                                         <span className="text-sm text-gray-500 ml-2">({product.review || 0} valoraciones)</span>
+                                    </div>
+                                    
+                                    <div className="flex items-center text-gray-600 text-sm mb-3">
+                                        <FaMapMarkerAlt className="text-amber-500 mr-1" />
+                                        <span>{getLocation(product)}</span>
                                     </div>
                                     
                                     {product.description && (
@@ -132,25 +204,32 @@ const ShopProducts = ({ products = [], styles }) => {
                                 </div>
                                 
                                 <div className="flex flex-wrap items-center justify-between gap-4 mt-4 pt-4 border-t border-gray-100">
-                                    {product.stock > 0 ? (
-                                        <p className="text-green-600 text-sm font-medium">
-                                            Disponible
-                                        </p>
-                                    ) : (
-                                        <p className="text-red-500 text-sm font-medium">
-                                            No disponible
-                                        </p>
-                                    )}
+                                    <div className="flex items-center gap-1 text-sm text-amber-600">
+                                        <FaExchangeAlt className="text-amber-500" />
+                                        <span>{product.hoursRequired || product.price || 0} horas</span>
+                                    </div>
                                     
-                                    <Link
-                                        to={`/product/details/${product.slug}`}
-                                        className="inline-flex items-center px-4 py-2 rounded-full text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors text-sm font-medium"
-                                    >
-                                        Ver detalles
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                        </svg>
-                                    </Link>
+                                    <div className="flex items-center gap-4">
+                                        {product.stock > 0 ? (
+                                            <p className="text-green-600 text-sm font-medium">
+                                                Disponible
+                                            </p>
+                                        ) : (
+                                            <p className="text-red-500 text-sm font-medium">
+                                                No disponible
+                                            </p>
+                                        )}
+                                    
+                                        <Link
+                                            to={`/product/details/${product.slug}`}
+                                            className="inline-flex items-center px-4 py-2 rounded-full text-amber-600 bg-amber-50 hover:bg-amber-100 transition-colors text-sm font-medium"
+                                        >
+                                            Ver detalles
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
