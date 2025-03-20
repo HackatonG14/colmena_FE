@@ -44,7 +44,8 @@ apiClient.interceptors.response.use(
             } 
             else if (error.response.status === 403) {
                 // Forbidden - probably needs authentication or lacks permissions
-                console.error('Error 403: Acceso prohibido');
+                // Silenciar mensajes de error en consola para desarrollo
+                // console.error('Error 403: Acceso prohibido');
                 
                 // Proporcionar datos de demostración para desarrollo local
                 if (error.config && error.config.url) {
@@ -52,7 +53,7 @@ apiClient.interceptors.response.use(
                     const url = error.config.url;
                     
                     // Si es una solicitud para obtener categorías
-                    if (url.includes('/home/get-categorys')) {
+                    if (url.includes('/home/get-categorys') || url.includes('/home/categorys')) {
                         return Promise.resolve({
                             data: {
                                 categorys: [
@@ -68,54 +69,62 @@ apiClient.interceptors.response.use(
                     }
                     
                     // Si es una solicitud para obtener productos
-                    if (url.includes('/home/products')) {
+                    if (url.includes('/home/get-products') || url.includes('/home/products')) {
                         return Promise.resolve({
                             data: {
                                 products: Array(8).fill().map((_, i) => ({
                                     _id: `product-${i + 1}`,
-                                    name: `Producto ${i + 1}`,
-                                    slug: `producto-${i + 1}`,
-                                    price: Math.floor(Math.random() * 100) + 10,
-                                    discount: Math.floor(Math.random() * 20),
-                                    image: `/images/product${i + 1}.jpg`,
+                                    name: `Servicio ${i + 1}`,
+                                    slug: `servicio-${i + 1}`,
+                                    price: 0,
+                                    discount: 0,
+                                    exchangeFor: 'Intercambio por otros servicios',
+                                    hoursRequired: Math.floor(Math.random() * 10) + 1,
+                                    image: `https://via.placeholder.com/500x300/${['e9c46a', '2a9d8f', 'e76f51', '264653'][i % 4]}/ffffff?text=Servicio+${i + 1}`,
                                     rating: Math.floor(Math.random() * 5) + 1,
                                     stock: Math.floor(Math.random() * 50) + 5
                                 })),
                                 totalProduct: 24,
-                                priceRange: { low: 10, high: 1000 }
+                                priceRange: { low: 0, high: 100 }
                             }
                         });
                     }
                     
                     // Si es una solicitud para obtener top productos o precios
-                    if (url.includes('/price-range-latest-products')) {
+                    if (url.includes('/price-range-latest-products') || url.includes('/price-range-latest-product')) {
                         return Promise.resolve({
                             data: {
                                 latest_product: Array(4).fill().map((_, i) => ({
                                     _id: `latest-${i + 1}`,
-                                    name: `Nuevo Producto ${i + 1}`,
-                                    slug: `nuevo-producto-${i + 1}`,
-                                    price: Math.floor(Math.random() * 100) + 10,
-                                    discount: Math.floor(Math.random() * 20),
-                                    image: `/images/latest${i + 1}.jpg`,
+                                    name: `Nuevo Servicio ${i + 1}`,
+                                    slug: `nuevo-servicio-${i + 1}`,
+                                    price: 0,
+                                    discount: 0,
+                                    exchangeFor: 'Intercambio por otros servicios',
+                                    hoursRequired: Math.floor(Math.random() * 10) + 1,
+                                    image: `https://via.placeholder.com/500x300/${['e9c46a', '2a9d8f', 'e76f51', '264653'][i % 4]}/ffffff?text=Nuevo+Servicio+${i + 1}`,
                                     rating: Math.floor(Math.random() * 5) + 1
                                 })),
                                 topRated_product: Array(4).fill().map((_, i) => ({
                                     _id: `top-${i + 1}`,
-                                    name: `Top Producto ${i + 1}`,
-                                    slug: `top-producto-${i + 1}`,
-                                    price: Math.floor(Math.random() * 100) + 10,
+                                    name: `Top Servicio ${i + 1}`,
+                                    slug: `top-servicio-${i + 1}`,
+                                    price: 0,
                                     discount: 0,
-                                    image: `/images/top${i + 1}.jpg`,
+                                    exchangeFor: 'Intercambio por otros servicios',
+                                    hoursRequired: Math.floor(Math.random() * 10) + 1,
+                                    image: `https://via.placeholder.com/500x300/${['2a9d8f', 'e9c46a', '264653', 'e76f51'][i % 4]}/ffffff?text=Top+Servicio+${i + 1}`,
                                     rating: 5
                                 })),
                                 discount_product: Array(4).fill().map((_, i) => ({
-                                    _id: `discount-${i + 1}`,
-                                    name: `Oferta ${i + 1}`,
-                                    slug: `oferta-${i + 1}`,
-                                    price: Math.floor(Math.random() * 100) + 20,
-                                    discount: Math.floor(Math.random() * 30) + 10,
-                                    image: `/images/discount${i + 1}.jpg`,
+                                    _id: `featured-${i + 1}`,
+                                    name: `Servicio Destacado ${i + 1}`,
+                                    slug: `servicio-destacado-${i + 1}`,
+                                    price: 0,
+                                    discount: 0,
+                                    exchangeFor: 'Intercambio por otros servicios',
+                                    hoursRequired: Math.floor(Math.random() * 10) + 1,
+                                    image: `https://via.placeholder.com/500x300/${['e76f51', '264653', 'e9c46a', '2a9d8f'][i % 4]}/ffffff?text=Destacado+${i + 1}`,
                                     rating: Math.floor(Math.random() * 5) + 1
                                 }))
                             }

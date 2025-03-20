@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FaSearch, FaShoppingCart, FaUserCircle, FaBars, FaTimes, FaChevronDown } from 'react-icons/fa';
+import { FaSearch, FaUserCircle, FaBars, FaTimes, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
+import { GiHoneycomb } from 'react-icons/gi';
 import { logout } from '../../store/reducers/authReducer';
 import { theme } from '../../utils/theme';
 import Button from '../ui/Button';
@@ -92,7 +93,7 @@ const Header = () => {
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <Link to="/" className="flex items-center" aria-label="Colmena - Ir a la página principal">
-            <img src="/logo.svg" alt="" className="h-10 w-auto" />
+            <img src="/icon.svg" alt="" className="h-8 w-auto" />
             <span className="ml-2 text-xl font-bold text-primary">Colmena</span>
           </Link>
           
@@ -101,11 +102,11 @@ const Header = () => {
             <form onSubmit={handleSearch} className="relative">
               <input
                 type="search"
-                placeholder="Buscar productos..."
+                placeholder="Buscar servicios..."
                 className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                aria-label="Buscar productos"
+                aria-label="Buscar servicios"
               />
               <button
                 type="submit"
@@ -138,11 +139,11 @@ const Header = () => {
             
             {/* Cart icon with badge */}
             <Link
-              to="/cart"
+              to="/card"
               className="relative p-2 text-gray-700 hover:text-primary"
-              aria-label={`Ver carrito${card_products.length > 0 ? ` con ${card_products.length} artículos` : ''}`}
+              aria-label={`Ver intercambios${card_products.length > 0 ? ` con ${card_products.length} servicios` : ''}`}
             >
-              <FaShoppingCart className="h-5 w-5" />
+              <FaExchangeAlt className="h-5 w-5" />
               {card_products.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {card_products.length}
@@ -230,11 +231,11 @@ const Header = () => {
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
             <Link
-              to="/cart"
+              to="/card"
               className="relative p-2 mr-2 text-gray-700"
-              aria-label={`Ver carrito${card_products.length > 0 ? ` con ${card_products.length} artículos` : ''}`}
+              aria-label={`Ver intercambios${card_products.length > 0 ? ` con ${card_products.length} servicios` : ''}`}
             >
-              <FaShoppingCart className="h-5 w-5" />
+              <FaExchangeAlt className="h-5 w-5" />
               {card_products.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                   {card_products.length}
@@ -274,11 +275,11 @@ const Header = () => {
             <form onSubmit={handleSearch} className="relative">
               <input
                 type="search"
-                placeholder="Buscar productos..."
+                placeholder="Buscar servicios..."
                 className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                aria-label="Buscar productos"
+                aria-label="Buscar servicios"
               />
               <button
                 type="submit"

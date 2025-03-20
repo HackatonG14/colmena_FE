@@ -15,7 +15,7 @@ const mockServices = [
     price: 0,
     exchangeFor: 'Clases de cocina, reparaciones del hogar, asesoría legal',
     hoursRequired: 20,
-    image: 'https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&q=80&w=500',
+    image: 'https://via.placeholder.com/500x300/e9c46a/ffffff?text=Diseño+Web',
     rating: 4.5,
   },
   {
@@ -25,7 +25,7 @@ const mockServices = [
     price: 0,
     exchangeFor: 'Diseño gráfico, reparación de electrónicos, clases de música',
     hoursRequired: 10,
-    image: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=500',
+    image: 'https://via.placeholder.com/500x300/2a9d8f/ffffff?text=Clases+de+Idiomas',
     rating: 5,
   },
   {
@@ -35,7 +35,7 @@ const mockServices = [
     price: 0,
     exchangeFor: 'Clases de idiomas, jardinería, asistencia administrativa',
     hoursRequired: 5,
-    image: 'https://images.unsplash.com/photo-1597424216809-3ba9864a12b0?auto=format&fit=crop&q=80&w=500',
+    image: 'https://via.placeholder.com/500x300/e76f51/ffffff?text=Reparación+Electrónicos',
     rating: 4,
   },
   {
@@ -45,7 +45,7 @@ const mockServices = [
     price: 0,
     exchangeFor: 'Clases de yoga, diseño gráfico, servicios de traducción',
     hoursRequired: 3,
-    image: 'https://images.unsplash.com/photo-1521791055366-0d553872125f?auto=format&fit=crop&q=80&w=500',
+    image: 'https://via.placeholder.com/500x300/264653/ffffff?text=Asesoría+Legal',
     rating: 4.8,
   }
 ];
@@ -55,7 +55,7 @@ const testimonials = [
   {
     id: 1,
     name: 'Laura Martínez',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+    avatar: 'https://via.placeholder.com/100/e9c46a/ffffff?text=LM',
     service: 'Clases de cocina',
     text: 'Intercambié mis clases de cocina por ayuda con mi sitio web. ¡La experiencia fue increíble! La plataforma Colmena hizo todo el proceso muy sencillo.',
     rating: 5
@@ -63,7 +63,7 @@ const testimonials = [
   {
     id: 2,
     name: 'Carlos Rodríguez',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+    avatar: 'https://via.placeholder.com/100/2a9d8f/ffffff?text=CR',
     service: 'Reparación de bicicletas',
     text: 'Ofrecí mis servicios de reparación de bicicletas y a cambio recibí asesoría legal que necesitaba urgentemente. Colmena me permitió acceder a servicios que normalmente no podría pagar.',
     rating: 5
@@ -146,7 +146,7 @@ const Home = () => {
             <div className="relative">
               <div className="relative overflow-hidden rounded-2xl shadow-lg">
                 <img 
-                  src="https://images.unsplash.com/photo-1556155092-490a1ba16284?auto=format&fit=crop&q=80&w=800" 
+                  src="https://via.placeholder.com/800x500/e9c46a/ffffff?text=Intercambio+de+Servicios" 
                   alt="Personas intercambiando servicios" 
                   className="w-full h-auto object-cover"
                 />

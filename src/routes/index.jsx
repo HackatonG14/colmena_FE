@@ -58,7 +58,7 @@ export const publicRoutes = [
     element: <WrapperComponent element={<Register />} />
   },
   {
-    path: '/cart',
+    path: '/card',
     element: <WrapperComponent element={<Card />} />,
   },
   {

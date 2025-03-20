@@ -3,12 +3,13 @@ import { validateEmail, validatePassword } from '../utils/helpers';
 
 /**
  * Custom hook for form handling
- * @param {Object} initialValues - Initial form values
- * @param {Function} onSubmit - Form submission handler
- * @param {Function} validate - Custom validation function
+ * @param {Object} options - Configuration options
+ * @param {Object} options.initialValues - Initial form values
+ * @param {Function} options.validate - Custom validation function
+ * @param {Function} options.onSubmit - Form submission handler
  * @returns {Object} Form state and handlers
  */
-const useForm = (initialValues, onSubmit, validate) => {
+export const useForm = ({ initialValues, validate, onSubmit }) => {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -49,7 +50,7 @@ const useForm = (initialValues, onSubmit, validate) => {
     let error = '';
 
     if (validate) {
-      const customErrors = validate({ [name]: value });
+      const customErrors = validate({ ...values, [name]: value });
       if (customErrors && customErrors[name]) {
         error = customErrors[name];
       }
@@ -66,7 +67,7 @@ const useForm = (initialValues, onSubmit, validate) => {
 
     setErrors((prev) => ({ ...prev, [name]: error }));
     return !error;
-  }, [validate]);
+  }, [validate, values]);
 
   /**
    * Reset form to initial values
@@ -87,7 +88,6 @@ const useForm = (initialValues, onSubmit, validate) => {
     const fieldNames = Object.keys(values);
     let isFormValid = true;
 
-    const newErrors = {};
     const newTouched = {};
 
     fieldNames.forEach((name) => {
@@ -135,4 +135,5 @@ const useForm = (initialValues, onSubmit, validate) => {
   };
 };
 
+// También exportamos como default para mantener compatibilidad
 export default useForm; 

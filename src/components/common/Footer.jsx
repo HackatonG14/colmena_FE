@@ -14,7 +14,7 @@ const Footer = () => {
           {/* Logo & descripción */}
           <div className="md:col-span-2">
             <div className="flex items-center mb-4">
-              <img src="/logo.svg" alt="" className="h-8 w-auto" />
+              <img src="/icon.svg" alt="" className="h-8 w-auto" />
               <span className="ml-2 text-xl font-medium text-gray-900">Colmena</span>
             </div>
             <p className="text-gray-600 mb-6 max-w-md">
