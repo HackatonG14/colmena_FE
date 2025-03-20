@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FaSearch, FaUserCircle, FaBars, FaTimes, FaChevronDown, FaExchangeAlt } from 'react-icons/fa';
 import { GiHoneycomb } from 'react-icons/gi';
@@ -10,6 +10,7 @@ import { toast } from '../ui/Toast';
 
 const Header = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo } = useSelector(state => state.auth);
   const { card_products } = useSelector(state => state.card);
@@ -64,8 +65,12 @@ const Header = () => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
     
-    // Redirect to search page with query parameter
-    window.location.href = `/search?q=${encodeURIComponent(searchTerm)}`;
+    navigate(`/products/search?q=${encodeURIComponent(searchTerm)}`);
+  };
+  
+  const handleNavigation = (path) => (e) => {
+    e.preventDefault();
+    navigate(path);
   };
   
   const navLinks = [
@@ -121,9 +126,10 @@ const Header = () => {
           {/* Desktop navigation */}
           <nav className="hidden md:flex items-center space-x-6" aria-label="Navegación principal">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.path}
-                to={link.path}
+                href={link.path}
+                onClick={handleNavigation(link.path)}
                 className={`
                   text-sm font-medium transition-colors
                   ${pathname === link.path 
@@ -134,12 +140,13 @@ const Header = () => {
                 aria-current={pathname === link.path ? 'page' : undefined}
               >
                 {link.name}
-              </Link>
+              </a>
             ))}
             
             {/* Cart icon with badge */}
-            <Link
-              to="/card"
+            <a
+              href="/card"
+              onClick={handleNavigation('/card')}
               className="relative p-2 text-gray-700 hover:text-primary"
               aria-label={`Ver intercambios${card_products.length > 0 ? ` con ${card_products.length} servicios` : ''}`}
             >
@@ -149,7 +156,7 @@ const Header = () => {
                   {card_products.length}
                 </span>
               )}
-            </Link>
+            </a>
             
             {/* User menu */}
             <div className="relative">
@@ -176,27 +183,30 @@ const Header = () => {
                 >
                   {userInfo ? (
                     <>
-                      <Link
-                        to="/dashboard"
+                      <a
+                        href="/dashboard"
+                        onClick={handleNavigation('/dashboard')}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
                         Mi cuenta
-                      </Link>
-                      <Link
-                        to="/dashboard/my-orders"
+                      </a>
+                      <a
+                        href="/dashboard/my-orders"
+                        onClick={handleNavigation('/dashboard/my-orders')}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
                         Mis pedidos
-                      </Link>
-                      <Link
-                        to="/dashboard/my-wishlist"
+                      </a>
+                      <a
+                        href="/dashboard/my-wishlist"
+                        onClick={handleNavigation('/dashboard/my-wishlist')}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
                         Lista de deseos
-                      </Link>
+                      </a>
                       <button
                         onClick={handleLogout}
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -207,20 +217,22 @@ const Header = () => {
                     </>
                   ) : (
                     <>
-                      <Link
-                        to="/login"
+                      <a
+                        href="/login"
+                        onClick={handleNavigation('/login')}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
                         Iniciar sesión
-                      </Link>
-                      <Link
-                        to="/register"
+                      </a>
+                      <a
+                        href="/register"
+                        onClick={handleNavigation('/register')}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         role="menuitem"
                       >
                         Registrarse
-                      </Link>
+                      </a>
                     </>
                   )}
                 </div>
@@ -230,8 +242,9 @@ const Header = () => {
           
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
-            <Link
-              to="/card"
+            <a
+              href="/card"
+              onClick={handleNavigation('/card')}
               className="relative p-2 mr-2 text-gray-700"
               aria-label={`Ver intercambios${card_products.length > 0 ? ` con ${card_products.length} servicios` : ''}`}
             >
@@ -241,7 +254,7 @@ const Header = () => {
                   {card_products.length}
                 </span>
               )}
-            </Link>
+            </a>
             
             <button
               id="mobile-menu-button"
@@ -296,8 +309,9 @@ const Header = () => {
             <ul className="space-y-1">
               {navLinks.map((link) => (
                 <li key={link.path}>
-                  <Link
-                    to={link.path}
+                  <a
+                    href={link.path}
+                    onClick={handleNavigation(link.path)}
                     className={`
                       block py-2 px-3 rounded-md text-base font-medium
                       ${pathname === link.path 
@@ -308,7 +322,7 @@ const Header = () => {
                     aria-current={pathname === link.path ? 'page' : undefined}
                   >
                     {link.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -319,24 +333,27 @@ const Header = () => {
                   <div className="px-3 py-2 text-sm font-medium text-gray-500">
                     Hola, {userInfo.name.split(' ')[0]}
                   </div>
-                  <Link
-                    to="/dashboard"
+                  <a
+                    href="/dashboard"
+                    onClick={handleNavigation('/dashboard')}
                     className="block py-2 px-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
                   >
                     Mi cuenta
-                  </Link>
-                  <Link
-                    to="/dashboard/my-orders"
+                  </a>
+                  <a
+                    href="/dashboard/my-orders"
+                    onClick={handleNavigation('/dashboard/my-orders')}
                     className="block py-2 px-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
                   >
                     Mis pedidos
-                  </Link>
-                  <Link
-                    to="/dashboard/my-wishlist"
+                  </a>
+                  <a
+                    href="/dashboard/my-wishlist"
+                    onClick={handleNavigation('/dashboard/my-wishlist')}
                     className="block py-2 px-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
                   >
                     Lista de deseos
-                  </Link>
+                  </a>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left py-2 px-3 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
@@ -347,16 +364,18 @@ const Header = () => {
               ) : (
                 <div className="flex flex-col space-y-2">
                   <Button
-                    as={Link}
-                    to="/login"
+                    as="a"
+                    href="/login"
+                    onClick={handleNavigation('/login')}
                     variant="primary"
                     fullWidth
                   >
                     Iniciar sesión
                   </Button>
                   <Button
-                    as={Link}
-                    to="/register"
+                    as="a"
+                    href="/register"
+                    onClick={handleNavigation('/register')}
                     variant="outline"
                     fullWidth
                   >

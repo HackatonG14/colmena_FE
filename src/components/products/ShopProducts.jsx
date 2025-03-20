@@ -5,6 +5,19 @@ import { AiFillHeart } from 'react-icons/ai';
 import { FaExchangeAlt } from 'react-icons/fa';
 
 const ShopProducts = ({ products = [], styles }) => {
+    // Función para obtener una imagen segura o un placeholder
+    const getImageSrc = (product) => {
+        if (product.images && product.images.length > 0) {
+            return product.images[0];
+        }
+        // Usar la propiedad image si existe
+        if (product.image) {
+            return product.image;
+        }
+        // Retornar una imagen de placeholder por defecto
+        return `https://via.placeholder.com/500x300/e9c46a/ffffff?text=${encodeURIComponent(product.name || 'Servicio')}`;
+    };
+
     return (
         <>
             {styles === 'grid' ? (
@@ -15,7 +28,7 @@ const ShopProducts = ({ products = [], styles }) => {
                                 <Link to={`/product/details/${product.slug}`}>
                                     <img 
                                         className="w-full h-full object-cover transition-transform hover:scale-105 duration-300" 
-                                        src={product.images[0]} 
+                                        src={getImageSrc(product)} 
                                         alt={product.name} 
                                     />
                                 </Link>
@@ -40,7 +53,7 @@ const ShopProducts = ({ products = [], styles }) => {
                                 
                                 <div className="flex items-center mb-3">
                                     <Rating ratings={product.rating} />
-                                    <span className="text-xs text-gray-500 ml-1">({product.review})</span>
+                                    <span className="text-xs text-gray-500 ml-1">({product.review || 0})</span>
                                 </div>
                                 
                                 <div className="flex flex-wrap items-end justify-between">
@@ -73,7 +86,7 @@ const ShopProducts = ({ products = [], styles }) => {
                                 <Link to={`/product/details/${product.slug}`}>
                                     <img 
                                         className="w-full h-full object-cover aspect-[4/3] md:aspect-auto max-h-60 md:max-h-full" 
-                                        src={product.images[0]} 
+                                        src={getImageSrc(product)} 
                                         alt={product.name} 
                                     />
                                 </Link>
@@ -99,7 +112,7 @@ const ShopProducts = ({ products = [], styles }) => {
                                     
                                     <div className="flex items-center mb-3">
                                         <Rating ratings={product.rating} />
-                                        <span className="text-sm text-gray-500 ml-2">({product.review} valoraciones)</span>
+                                        <span className="text-sm text-gray-500 ml-2">({product.review || 0} valoraciones)</span>
                                     </div>
                                     
                                     {product.description && (

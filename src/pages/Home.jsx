@@ -133,14 +133,12 @@ const Home = () => {
                 >
                   Unirse ahora
                 </Button>
-                <Button 
-                  as={Link} 
+                <Link 
                   to="/shops" 
-                  variant="outline" 
-                  className="min-w-[160px] py-3 px-6 rounded-full border-amber-500 text-amber-600 hover:bg-amber-50"
+                  className="min-w-[160px] py-3 px-6 rounded-full border border-amber-500 text-amber-600 hover:bg-amber-50 text-center flex items-center justify-center"
                 >
                   Explorar
-                </Button>
+                </Link>
               </div>
             </div>
             <div className="relative">
@@ -322,14 +320,12 @@ const Home = () => {
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Únete a miles de personas que ya están intercambiando servicios, construyendo relaciones y fortaleciendo la economía colaborativa.
           </p>
-          <Button 
-            as={Link} 
+          <Link 
             to="/register" 
-            variant="primary"
-            className="min-w-[200px] py-4 px-8 text-lg rounded-full bg-amber-500 hover:bg-amber-600 transition-colors"
+            className="min-w-[200px] py-4 px-8 text-lg rounded-full bg-amber-500 hover:bg-amber-600 transition-colors text-white inline-block"
           >
             Comenzar ahora
-          </Button>
+          </Link>
         </div>
       </section>
     </div>
