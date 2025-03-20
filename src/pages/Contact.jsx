@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from '../hooks/useForm';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -11,6 +11,11 @@ import { FiMail, FiMapPin, FiPhone, FiClock } from 'react-icons/fi';
  */
 const Contact = () => {
   const [loading, setLoading] = useState(false);
+  
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   const { values, handleChange, handleSubmit, errors, resetForm } = useForm({
     initialValues: {

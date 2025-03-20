@@ -1,7 +1,7 @@
 export const theme = {
   colors: {
     primary: {
-      main: '#FFB800', // Amber color
+      main: '#FFB800', 
       light: '#FFC633',
       dark: '#E5A500',
       contrast: '#FFFFFF'
