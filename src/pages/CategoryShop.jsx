@@ -144,8 +144,8 @@ const CategoryShop = () => {
                         </div>
 
                         {/* Sidebar filters */}
-                        <div className={`w-full md:w-3/12 md:pr-0 ${filter ? 'block' : 'hidden md:block'}`}>
-                            <div className="bg-white rounded-3xl shadow-sm p-6 mb-6 border border-gray-100">
+                        <div className={`w-full md:w-3/12 ${filter ? 'block' : 'hidden md:block'}`}>
+                            <div className="bg-white rounded-3xl shadow-sm p-6 mb-6 border border-gray-100 sticky top-24">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-xl font-medium text-gray-900">Filtros</h2>
                                     <button 
@@ -308,7 +308,7 @@ const CategoryShop = () => {
                         </div>
 
                         {/* Main content */}
-                        <div className="w-full md:w-9/12 md:pl-0">
+                        <div className="w-full md:w-8/12">
                             <div className="bg-white rounded-3xl shadow-sm p-6 mb-6 border border-gray-100">
                                 <div className="flex flex-wrap justify-between items-center">
                                     <h2 className="text-lg font-medium text-gray-800 mb-3 md:mb-0">

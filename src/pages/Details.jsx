@@ -311,20 +311,6 @@ const Details = () => {
                                             <Rating ratings={displayProduct?.rating} />
                                         </div>
                                         <span className="text-sm text-gray-500">({displayProduct?.review?.length} valoraciones)</span>
-                                        <div className="flex gap-3 items-center text-sm text-gray-500">
-                                            <span>|</span>
-                                            <div className="flex gap-2">
-                                                <Link to="" className="h-7 w-7 rounded-full flex justify-center items-center bg-amber-50 hover:bg-amber-100 transition-colors text-blue-500 shadow-sm">
-                                                    <FaFacebookF />
-                                                </Link>
-                                                <Link to="" className="h-7 w-7 rounded-full flex justify-center items-center bg-amber-50 hover:bg-amber-100 transition-colors text-blue-400 shadow-sm">
-                                                    <FaTwitter />
-                                                </Link>
-                                                <Link to="" className="h-7 w-7 rounded-full flex justify-center items-center bg-amber-50 hover:bg-amber-100 transition-colors text-pink-500 shadow-sm">
-                                                    <FaInstagram />
-                                                </Link>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div className="bg-gray-50/80 px-4 py-4 rounded-2xl mb-4">
                                         <h2 className="text-lg font-medium text-gray-800 mb-3">Descripción</h2>
