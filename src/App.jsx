@@ -19,7 +19,7 @@ function App() {
         {publicRoutes.map((route, index) => (
           <Route key={index} path={route.path} element={route.element} />
         ))}
-        
+
         {/* Rutas protegidas */}
         {protectedRoutes.map((route, index) => (
           <Route key={index} path={route.path} element={route.element}>
