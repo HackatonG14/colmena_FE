@@ -5,11 +5,11 @@ import { get_category } from '../store/reducers/homeReducer';
 import LoadingScreen from '../components/LoadingScreen';
 
 /**
- * Categories page component that displays all product categories
+ * Categories page component that displays all service categories
  */
 const Categories = () => {
   const dispatch = useDispatch();
-  const { categories, loader } = useSelector(state => state.home);
+  const { categorys, loader } = useSelector(state => state.home);
 
   useEffect(() => {
     dispatch(get_category());
@@ -35,21 +35,21 @@ const Categories = () => {
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="mb-8 text-center">
-        <h1 className="text-3xl font-bold mb-3">Categorías de Productos</h1>
+        <h1 className="text-3xl font-bold mb-3">Categorías de Servicios</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Explora nuestras categorías de productos y encuentra exactamente lo que estás buscando.
+          Explora nuestras categorías de servicios y encuentra oportunidades de intercambio que se ajusten a tus habilidades e intereses.
         </p>
       </div>
 
-      {categories.length === 0 ? (
+      {!Array.isArray(categorys) || categorys.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-xl text-gray-600">No hay categorías disponibles en este momento.</p>
+          <p className="text-xl text-gray-600">No hay categorías de servicios disponibles en este momento.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category, index) => (
+          {categorys.map((category, index) => (
             <Link 
-              key={category._id} 
+              key={category._id || index} 
               to={`/products?category=${category.name}`}
               className="group overflow-hidden rounded-lg shadow-md transition-transform duration-300 hover:shadow-lg hover:-translate-y-1"
             >
@@ -63,7 +63,7 @@ const Categories = () => {
                 <div className="absolute bottom-0 left-0 right-0 p-4 z-20">
                   <h2 className="text-xl font-bold text-white">{category.name}</h2>
                   <p className="text-gray-200 text-sm">
-                    {category.description || `Explorar productos en ${category.name}`}
+                    {category.description || `Explorar servicios de ${category.name}`}
                   </p>
                 </div>
               </div>
