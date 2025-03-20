@@ -125,14 +125,12 @@ const Home = () => {
                 Conectamos personas que valoran más el intercambio que el dinero. Forma parte de una comunidad colaborativa.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button 
-                  as={Link} 
+                <Link 
                   to="/register" 
-                  variant="primary"
-                  className="min-w-[160px] py-3 px-6 rounded-full text-white bg-amber-500 hover:bg-amber-600 transition-colors"
+                  className="min-w-[160px] py-3 px-6 rounded-full text-white bg-amber-500 hover:bg-amber-600 transition-colors text-center flex items-center justify-center"
                 >
                   Unirse ahora
-                </Button>
+                </Link>
                 <Link 
                   to="/shops" 
                   className="min-w-[160px] py-3 px-6 rounded-full border border-amber-500 text-amber-600 hover:bg-amber-50 text-center flex items-center justify-center"
@@ -144,7 +142,7 @@ const Home = () => {
             <div className="relative">
               <div className="relative overflow-hidden rounded-2xl shadow-lg">
                 <img 
-                  src="https://via.placeholder.com/800x500/e9c46a/ffffff?text=Intercambio+de+Servicios" 
+                  src="/banner-image.png" 
                   alt="Personas intercambiando servicios" 
                   className="w-full h-auto object-cover"
                 />
