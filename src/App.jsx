@@ -3,7 +3,9 @@ import './App.css'
 import Router from './router/Router'
 function App() {
 
-  const allRoutes = [allRoutes, setAllRoutes] = useState([])
+  // eslint-disable-next-line no-unused-vars
+  const [allRoutes, setAllRoutes] = useState([]);
+
 
   return (
   <>
