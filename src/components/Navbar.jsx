@@ -37,7 +37,7 @@ const Navbar = () => {
           <Link to="/" className="text-gray-700 hover:text-black font-bold" onClick={() => setIsOpen(false)}>
             Inicio
           </Link>
-          <Link to="/crear-anuncio" className="text-gray-700 hover:text-black font-bold" onClick={() => setIsOpen(false)}>
+          <Link to="/createAd" className="text-gray-700 hover:text-black font-bold" onClick={() => setIsOpen(false)}>
             Crear Anuncio
           </Link>
         </div>
