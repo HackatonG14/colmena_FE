@@ -4,18 +4,12 @@ const Footer = () => {
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-start md:items-center">
           <div className="mb-6 md:mb-0">
             <div className="flex items-center gap-2">
-              <img src="/colmena-logo.png" alt="Colmena Logo" className="w-6 h-6" />
+              <img src="/icon.svg" alt="Colmena Logo" className="w-6 h-6" />
               <span className="text-lg font-semibold">Colmena</span>
             </div>
             <p className="text-gray-600 text-sm mt-2">
               Conectamos personas para intercambiar habilidades y servicios, construyendo una economía colaborativa y sostenible.
             </p>
-            <div className="flex space-x-4 mt-3">
-              <a href="#" className="text-gray-500 hover:text-gray-700">🔵</a>
-              <a href="#" className="text-gray-500 hover:text-gray-700">🔷</a>
-              <a href="#" className="text-gray-500 hover:text-gray-700">📷</a>
-              <a href="#" className="text-gray-500 hover:text-gray-700">📘</a>
-            </div>
           </div>
           <div className="flex space-x-12">
             <div>
