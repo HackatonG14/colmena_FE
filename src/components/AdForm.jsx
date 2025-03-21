@@ -23,15 +23,19 @@ const AdForm = ({ onSubmit }) => {
       onSubmit={handleSubmit}
       className="bg-amber-100 p-6 rounded-lg shadow-md w-full max-w-md mx-auto"
     >
-      <h2 className="text-2xl font-semibold text-center mb-4">CREAR UN ANUNCIO</h2>
-      <label className="block font-medium text-gray-700">Nombre de tu habilidad</label>
+      <h2 className="text-2xl font-semibold text-center mb-5">
+        CREAR UN ANUNCIO
+      </h2>
+      <label className="block font-medium text-gray-700">
+        Nombre de tu habilidad
+      </label>
       <input
         type="text"
         name="title"
         value={formData.title}
         onChange={handleChange}
-        placeholder="Ej: Programación Web"
-        className="w-full p-2 border rounded-md mb-4"
+        placeholder="Nombre de la Habilidad"
+        className="w-full p-2 border border-gray-400 rounded-md mb-3 bg-white"
         required
       />
       <label className="block font-medium text-gray-700">Descripción</label>
@@ -39,8 +43,8 @@ const AdForm = ({ onSubmit }) => {
         name="description"
         value={formData.description}
         onChange={handleChange}
-        placeholder="Describe tu habilidad..."
-        className="w-full p-2 border rounded-md mb-4"
+        placeholder="Descripción"
+        className="w-full p-2 border border-gray-400 rounded-md mb-2 bg-white"
         required
       ></textarea>
       <label className="block font-medium text-gray-700">Categoría</label>
@@ -49,8 +53,8 @@ const AdForm = ({ onSubmit }) => {
         name="category"
         value={formData.category}
         onChange={handleChange}
-        placeholder="Ej: Desarrollo, Diseño..."
-        className="w-full p-2 border rounded-md mb-4"
+        placeholder="Categoría"
+        className="w-full p-2 border border-gray-400 rounded-md mb-4 bg-white"
         required
       />
       <label className="block font-medium text-gray-700">Anunciante</label>
@@ -59,8 +63,8 @@ const AdForm = ({ onSubmit }) => {
         name="advertiser"
         value={formData.advertiser}
         onChange={handleChange}
-        placeholder="Tu nombre"
-        className="w-full p-2 border rounded-md mb-4"
+        placeholder="Anunciante"
+        className="w-full p-2 border border-gray-400 rounded-md mb-5 bg-white"
         required
       />
       <label className="block font-medium text-gray-700">URL imagen</label>
@@ -69,12 +73,12 @@ const AdForm = ({ onSubmit }) => {
         name="imageUrl"
         value={formData.imageUrl}
         onChange={handleChange}
-        placeholder="http://imagen.com/tu-habilidad.jpg"
-        className="w-full p-2 border rounded-md mb-4"
+        placeholder="URL Imagen"
+        className="w-full p-2 border border-gray-400 rounded-md mb-5 bg-white"
       />
       <button
         type="submit"
-        className="w-full bg-orange-500 text-white py-2 rounded-md shadow-md hover:bg-orange-600 transition"
+        className="w-full bg-orange-500 text-white py-2 rounded-md shadow-md hover:bg-orange-600 transition mt-2"
       >
         Publicar anuncio
       </button>

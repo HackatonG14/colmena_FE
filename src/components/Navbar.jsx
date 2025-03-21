@@ -19,7 +19,7 @@ const Navbar = () => {
           <Link to="/" className="text-gray-700 hover:text-black font-bold">
             Inicio
           </Link>
-          <Link to="/crear-anuncio" className="text-gray-700 hover:text-black font-bold">
+          <Link to="/createAd" className="text-gray-700 hover:text-black font-bold">
             Crear Anuncio
           </Link>
         </div>
